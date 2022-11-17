@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.htht.service.platform.portal.manager.mapper.InfoTemplateMapper">
+
+    <resultMap id="BaseResultMap" type="cn.htht.service.platform.portal.entity.manager.InfoTemplate">
+        <id column="id" property="id" />
+        <result column="module_id" property="moduleId" />
+        <result column="search_key" property="searchKey" />
+        <collection property="contentList" javaType="java.util.List" resultMap="ContentResultMap"/>
+    </resultMap>
+
+    <resultMap id="ContentResultMap" type="cn.htht.service.platform.portal.entity.manager.Content">
+        <id column="cid" property="id" />
+        <result column="title" property="title" />
+        <result column="content" property="content" />
+        <result column="template_id" property="templateId" />
+        <result column="image_url" property="imageUrl"/>
+        <result column="create_time" property="createTime" />
+        <result column="create_by" property="createBy" />
+        <result column="update_time" property="updateTime"/>
+        <result column="update_by" property="updateBy"/>
+        <result column="remark" property="remark"/>
+        <association property="fileData" resultMap="FileDataMap"/>
+    </resultMap>
+
+    <resultMap id="FileDataMap" type="cn.htht.service.platform.portal.entity.manager.FileData">
+        <id property="id" column="fid"/>
+        <result property="fileType" column="file_type"/>
+        <result property="ext" column="ext"/>
+        <result property="bucketName" column="bucket_name"/>
+        <result property="objectName" column="object_name"/>
+        <result property="fileName" column="file_name"/>
+        <result property="fileTitle" column="file_title"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="BaseColumnList">
+        t.id, t.module_id, t.search_key
+    </sql>
+
+    <sql id="selectVo">
+        select
+           <include refid="BaseColumnList"/>,
+           co.id as cid, co.title, co.content, co.template_id, co.image_url, co.data_id, co.create_time, co.create_by, co.update_time, co.update_by, co.remark,
+           f.id as fid, f.file_type, f.ext, f.bucket_name, f.object_name, f.file_name, f.file_title
+        from
+        t_info_template t
+        left join t_content as co on t.id = co.template_id
+        left join t_file_data as f on f.id = co.data_id
+    </sql>
+
+    <select id="getTemplateByModuleId" resultMap="BaseResultMap">
+        <include refid="selectVo"/>
+        where t.module_id = #{id}
+    </select>
+
+    <select id="getTemplateByContentId" resultMap="BaseResultMap">
+        <include refid="selectVo"/>
+        where t.id = (select template_id from t_content where id = #{contentId})
+    </select>
+
+    <select id="page" resultMap="ContentResultMap">
+        select
+        co.id as cid, co.title, co.content, co.template_id, co.image_url, co.data_id, co.create_time, co.create_by, co.update_time, co.update_by, co.remark,
+        f.id as fid, f.file_type, f.ext, f.bucket_name, f.object_name, f.file_name, f.file_title
+        from
+        t_info_template t
+        left join t_content as co on t.id = co.template_id
+        left join t_file_data as f on f.id = co.data_id
+        where t.module_id = #{id}
+        order by create_time desc
+    </select>
+
+</mapper>

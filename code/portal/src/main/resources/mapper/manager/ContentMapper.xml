@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.htht.service.platform.portal.manager.mapper.ContentMapper">
+    <resultMap id="BaseResultMap" type="cn.htht.service.platform.portal.entity.manager.Content">
+        <id column="id" property="id"/>
+        <result column="title" property="title"/>
+        <result column="content" property="content"/>
+        <result column="template_id" property="templateId"/>
+        <result column="data_id" property="dataId"/>
+        <result column="image_url" property="imageUrl"/>
+        <result column="create_time" property="createTime"/>
+        <result column="create_by" property="createBy"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="update_by" property="updateBy"/>
+        <result column="remark" property="remark"/>
+        <association property="fileData" resultMap="FileDataMap"/>
+    </resultMap>
+
+
+    <resultMap id="ContentVoMap" type="cn.htht.service.platform.portal.entity.vo.ContentVo">
+        <id column="id" property="id"/>
+        <result column="title" property="title"/>
+        <result column="content" property="content"/>
+        <result column="template_id" property="templateId"/>
+        <result column="data_id" property="dataId"/>
+        <result column="image_url" property="imageUrl"/>
+        <result column="create_time" property="createTime"/>
+        <result column="create_by" property="createBy"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="update_by" property="updateBy"/>
+        <result column="remark" property="remark"/>
+        <association property="fileData" resultMap="FileDataMap"/>
+    </resultMap>
+
+    <resultMap id="ServiceDataMap" type="cn.htht.service.platform.portal.entity.vo.ServiceDataVo">
+        <id column="id" property="id"/>
+        <result column="module_name" property="title"/>
+        <result column="router" property="router"/>
+        <result column="template_id" property="templateId"/>
+        <result column="create_time" property="createTime"/>
+        <result column="create_by" property="createBy"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="update_by" property="updateBy"/>
+        <result column="remark" property="remark"/>
+        <result column="type" property="type"/>
+        <result column="module_id" property="moduleId"/>
+        <result column="icon" property="icon"/>
+    </resultMap>
+
+    <resultMap id="FileDataMap" type="cn.htht.service.platform.portal.entity.manager.FileData">
+        <id property="id" column="fid"/>
+        <result property="fileType" column="file_type"/>
+        <result property="ext" column="ext"/>
+        <result property="bucketName" column="bucket_name"/>
+        <result property="objectName" column="object_name"/>
+        <result property="fileName" column="file_name"/>
+        <result property="fileTitle" column="file_title"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="BaseColumnList">
+        t.id, t.title, t.content, t.template_id, t.data_id, t.image_url, t.create_time, t.create_by, t.update_time, t.update_by, t.remark
+    </sql>
+
+    <sql id="ServiceDataColumnList">
+        t.id,
+        t.search_key,
+        t.module_name,
+        t.parent_module_id,
+        t.parent_module_name,
+        t.template_type,
+        t.module_type,
+        t.icon,
+        t.is_show,
+        t.router,
+        t.sort,
+        t.is_link,
+        t.link_url,
+        t.router_str,
+        t.template_id,
+        t.create_time,
+        t.create_by,
+        t.update_time,
+        t.update_by,
+        t.remark
+    </sql>
+
+    <update id="updateContent" parameterType="cn.htht.service.platform.portal.entity.dto.ContentDto">
+        update t_content
+        set title     = #{contentDto.title},
+            content   = #{contentDto.content},
+            image_url = #{contentDto.imageUrl},
+            data_id   = #{contentDto.dataId}
+        where id = #{contentDto.contentId}
+    </update>
+    <select id="selectContentById" resultMap="BaseResultMap">
+        select
+        <include refid="BaseColumnList"/>, f.id as fid, f.ext, f.bucket_name, f.object_name, f.file_name, f.file_title
+        from t_content as t
+        left join t_file_data as f on t.data_id = f.id
+        where
+        t.id = #{contentId}
+    </select>
+
+    <select id="getContentByModuleId" parameterType="java.util.Map" resultMap="ContentVoMap">
+        select ta.id, ta.title, ta.content, ta.template_id, ta.data_id, ta.image_url, ta.create_time, ta.create_by,
+        ta.update_time, ta.update_by, ta.remark, ta.type, ta.module_id
+        from (
+        select <include refid="BaseColumnList"/>, 'single' as type, st.module_id
+        from t_content as t
+        left join t_file_data as f on t.data_id = f.id
+        left join t_single_template st on t.template_id = st.id
+        union all
+        select <include refid="BaseColumnList"/>, 'info' as type, st.module_id
+        from t_content as t
+        left join t_file_data as f on t.data_id = f.id
+        left join t_info_template st on t.template_id = st.id
+        ) as ta
+        where ( ta.type = 'single' and ta.module_id IN
+        <foreach collection="params.single" item="moduleId" open="(" separator="," close=")">
+            #{moduleId}
+        </foreach>
+        ) or (
+        type = 'info' and ta.module_id IN
+        <foreach collection="params.info" item="moduleId" open="(" separator="," close=")">
+            #{moduleId}
+        </foreach>
+        )
+    </select>
+
+    <select id="getServiceDataByModuleId" parameterType="java.util.Map" resultMap="ServiceDataMap">
+        select
+        tt.id,tt.module_name,tt.router,tt.template_id,tt.create_time,tt.create_by,tt.update_time,tt.update_by,tt.remark,tt.type,tt.module_id,tt.icon
+        from (
+        select <include refid="ServiceDataColumnList"/>, 'service' as type, st.module_id
+        from t_module as t
+        left join t_service_template st on st.module_id = t.id
+        union all
+        select <include refid="ServiceDataColumnList"/>, 'data' as type, st.module_id
+        from t_module as t
+        left join t_data_template st on st.module_id = t.id
+        ) as tt
+        where ( tt.type = 'service' and tt.module_id IN
+        <foreach collection="params.service" item="moduleId" open="(" separator="," close=")">
+            #{moduleId}
+        </foreach>
+        ) or (
+              tt.type = 'data' and tt.module_id IN
+        <foreach collection="params.data" item="moduleId" open="(" separator="," close=")">
+            #{moduleId}
+        </foreach>
+        )
+    </select>
+    <select id="selectAllContent" resultType="cn.htht.service.platform.portal.entity.user.DocEntity">
+        select c.id, c.title, c.id as content_id, t.module_id, m.router, m.module_name, m.template_type as temple_type, c.create_time, c.create_by, "single" as service_template_type, date_format(now(),'%Y-%m-%d %H:%m:%s') as sys_date
+        from t_content as c
+                 inner join t_single_template as t on c.template_id = t.id
+                 inner join t_module as m on t.module_id = m.id
+        UNION ALL
+        select c.id, c.title, c.id as content_id, t.module_id, m.router, m.module_name, m.template_type as temple_type, c.create_time, c.create_by, "info" as service_template_type, date_format(now(),'%Y-%m-%d %H:%m:%s') as sys_date
+        from t_content as c
+                 inner join t_info_template as t on c.template_id = t.id
+                 inner join t_module as m on t.module_id = m.id
+        UNION ALL
+        select m.id, m.module_name as title, '' as content_id, m.id as module_id, m.router, m.module_name, m.template_type as temple_type, m.create_time, m.create_by, "data" as service_template_type, date_format(now(),'%Y-%m-%d %H:%m:%s') as sys_date
+        from t_module as m where template_type = 5
+        UNION ALL
+        select m.id, m.module_name as title, '' as content_id, m.id as module_id, m.router, m.module_name, m.template_type as temple_type, m.create_time, m.create_by, "service" as service_template_type, date_format(now(),'%Y-%m-%d %H:%m:%s') as sys_date
+        from t_module as m where template_type = 6
+    </select>
+</mapper>

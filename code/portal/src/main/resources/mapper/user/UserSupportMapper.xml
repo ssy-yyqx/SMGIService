@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.htht.service.platform.portal.user.mapper.UserSupportMapper">
+    <resultMap type="cn.htht.service.platform.portal.entity.user.UserSupport" id="UserSupportResult">
+        <id property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="moduleId" column="module_id"/>
+        <result property="routerURI" column="router_uri"/>
+        <result property="name" column="name"/>
+        <result property="supportCount" column="support_count"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+    <sql id="selectSupportVo">
+        select t.*, (select count(0) from user_support where router_uri = t.router_uri) as support_count
+        from
+        (select id,
+               user_id,
+               module_id,
+               router_uri,
+               name,
+               create_time
+        from user_support) as t
+    </sql>
+
+    <!-- 查询条件 -->
+    <sql id="sqlwhereSearch">
+        <where>
+            <if test="id !=null">
+                and id = #{id}
+            </if>
+            <if test="userId !=null and userId != ''">
+                and user_id = #{userId}
+            </if>
+            <if test="moduleId !=null and moduleId != ''">
+                and module_id = #{moduleId}
+            </if>
+            <if test="routerURI !=null and routerURI != ''">
+                and router_uri = #{routerURI}
+            </if>
+            <if test="name !=null and name != ''">
+                and name like concat(concat('%',#{name}),'%')
+            </if>
+        </where>
+    </sql>
+
+    <select id="selectUserSupportList" parameterType="cn.htht.service.platform.portal.entity.user.UserSupport"
+            resultMap="UserSupportResult">
+        <include refid="selectSupportVo"/>
+        <include refid="sqlwhereSearch"/>
+    </select>
+
+    <insert id="insertUserSupport" parameterType="cn.htht.service.platform.portal.entity.system.SystemConfig">
+        insert into user_support (
+        <if test="id != null and id != '' ">id,</if>
+        <if test="userId !=null and userId != ''">user_id,</if>
+        <if test="moduleId !=null and moduleId != ''">module_id,</if>
+        <if test="routerURI !=null and routerURI != ''">router_uri,</if>
+        <if test="name !=null and name != ''">name,</if>
+        create_time
+        )values(
+        <if test="id != null and id != '' ">#{id},</if>
+        <if test="userId !=null and userId != ''">#{userId},</if>
+        <if test="moduleId !=null and moduleId != ''">#{moduleId},</if>
+        <if test="routerURI !=null and routerURI != ''">#{routerURI},</if>
+        <if test="name !=null and name != ''">#{name},</if>
+        REPLACE(unix_timestamp(current_timestamp(3)),'.','')
+        )
+    </insert>
+
+    <delete id="deleteByUserId" parameterType="String">
+        delete
+        from user_support
+        where user_id = #{userId} and router_uri = #{routerURI}
+    </delete>
+
+    <delete id="deleteById" parameterType="String">
+        delete
+        from user_support
+        where id = #{id}
+    </delete>
+
+</mapper>

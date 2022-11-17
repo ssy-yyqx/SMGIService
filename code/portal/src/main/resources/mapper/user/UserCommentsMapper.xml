@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.htht.service.platform.portal.user.mapper.UserCommentsMapper">
+    <resultMap type="cn.htht.service.platform.portal.entity.user.UserComments" id="userCommentsResult">
+        <id column="id" property="id"/>
+        <result column="module_id" property="moduleId"/>
+        <result column="user_id" property="userId"/>
+        <result column="content" property="content"/>
+        <result column="create_by" property="createBy"/>
+        <result column="create_time" property="createTime"/>
+        <result column="remark" property="remark"/>
+    </resultMap>
+
+    <sql id="userCommentsColumn">
+        id, module_id, user_id, content, create_by, create_time, remark
+    </sql>
+
+    <sql id="selectUserCommentsVo">
+        select <include refid="userCommentsColumn"/>
+        from user_comments
+    </sql>
+    <insert id="insertComments">
+        insert into user_comments (
+            <if test="id != null and id != ''">id,</if>
+            <if test="moduleId != null and moduleId != ''">module_id,</if>
+            <if test="userId != null and userId != ''">user_id,</if>
+            <if test="content != null and content != ''">content,</if>
+            <if test="createBy != null and createBy != ''">create_by,</if>
+            <if test="remark != null and remark != ''">remark,</if>
+            create_time
+        ) values (
+            <if test="id != null and id != ''">#{id},</if>
+            <if test="moduleId != null and moduleId != ''">#{moduleId},</if>
+            <if test="userId != null and userId != ''">#{userId},</if>
+            <if test="content != null and content != ''">#{content},</if>
+            <if test="createBy != null and createBy != ''">#{createBy},</if>
+            <if test="remark != null and remark != ''">#{remark},</if>
+            REPLACE(unix_timestamp(current_timestamp(3)),'.','')
+        )
+    </insert>
+    <select id="getComments" resultType="cn.htht.service.platform.portal.entity.user.UserComments">
+        <include refid="selectUserCommentsVo"/>
+        where module_id = #{moduleId}
+        order by create_time desc
+    </select>
+
+
+</mapper>

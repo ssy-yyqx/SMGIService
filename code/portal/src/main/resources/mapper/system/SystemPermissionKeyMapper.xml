@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.htht.service.platform.portal.system.mapper.SystemPermissionKeyMapper">
+    <insert id="insertKeys" parameterType="cn.htht.service.platform.portal.entity.system.SystemPermissionKey">
+        insert into system_permission_key (
+        <if test="id != null and id != '' ">id</if>
+        <if test="permKey != null and permKey != '' ">,perm_key</if>
+        <if test="router != null and router != '' ">,router</if>
+        )values(
+        <if test="id != null and id != '' ">#{id}</if>
+        <if test="permKey != null and permKey != ''">,#{permKey}</if>
+        <if test="router != null and router != ''">#{router}</if>
+        )
+    </insert>
+</mapper> 

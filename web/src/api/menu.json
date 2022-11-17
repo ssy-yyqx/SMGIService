@@ -1,0 +1,770 @@
+[
+  {
+    "id": "1",
+    "name": "首页",
+    "image": "dashboard",
+    "routerName": "Dashboard"
+  },
+  {
+    "id": "2",
+    "name": "新闻聚焦",
+    "image": "news",
+    "routerName": "InternationalNews",
+    "children": [
+      {
+        "id": "2_1",
+        "name": "国际要闻",
+        "image": "dashboard",
+        "routerName": "InternationalNews"
+      },
+      {
+        "id": "2_2",
+        "name": "军媒视点",
+        "image": "dashboard",
+        "routerName": "MilitaryMedia"
+      },
+      {
+        "id": "2_3",
+        "name": "中心动态",
+        "image": "dashboard",
+        "routerName": "CentralDynamics"
+      }
+    ]
+  },
+  {
+    "id": "3",
+    "name": "通知公告",
+    "image": "notice",
+    "routerName": "WeekMeeting",
+    "children": [
+      {
+        "id": "3_1",
+        "name": "一周会议",
+        "image": "dashboard",
+        "routerName": "WeekMeeting"
+      },
+      {
+        "id": "3_2",
+        "name": "中心公告",
+        "image": "dashboard",
+        "routerName": "CenterNotice"
+      }
+    ]
+  },
+  {
+    "id": "4",
+    "name": "中心职能",
+    "image": "centerIntroduce",
+    "routerName": "CenterIntroduce",
+    "children": [
+      {
+        "id": "4_1",
+        "name": "中心介绍",
+        "image": "dashboard",
+        "routerName": "CenterIntroduce"
+      },
+      {
+        "id": "4_2",
+        "name": "一室",
+        "image": "dashboard",
+        "routerName": "RoomIntroduce1"
+      },
+      {
+        "id": "4_3",
+        "name": "二室",
+        "image": "dashboard",
+        "routerName": "RoomIntroduce2"
+      },
+      {
+        "id": "4_4",
+        "name": "三室",
+        "image": "dashboard",
+        "routerName": "RoomIntroduce3"
+      },
+      {
+        "id": "4_5",
+        "name": "四室",
+        "image": "dashboard",
+        "routerName": "RoomIntroduce4"
+      },
+      {
+        "id": "4_6",
+        "name": "五室",
+        "image": "dashboard",
+        "routerName": "RoomIntroduce5"
+      },
+      {
+        "id": "4_7",
+        "name": "六室",
+        "image": "dashboard",
+        "routerName": "RoomIntroduce6"
+      },
+      {
+        "id": "4_8",
+        "name": "七室",
+        "image": "dashboard",
+        "routerName": "RoomIntroduce7"
+      }
+    ]
+  },
+  {
+    "id": "5",
+    "name": "业务导航",
+    "image": "businessNavigation",
+    "routerName": "BusinessNavigation5_1_1_1",
+    "children": [
+      {
+        "id": "5_1",
+        "name": "空间基准建立维持及应用",
+        "routerName": "BusinessNavigation5_1_1",
+        "children": [
+          {
+            "id": "5_1_1",
+            "name": "大地基准",
+            "routerName": "BusinessNavigation5_1_1_1",
+            "children": [
+              {
+                "id": "5_1_1_1",
+                "name": "大地控制点",
+                "routerName": "BusinessNavigation5_1_1_1",
+                "specialRouter": "SpecialService6_2_1"
+              },
+              {
+                "id": "5_1_1_2",
+                "name": "速度场服务",
+                "routerName": "BusinessNavigation5_1_1_2"
+              },
+              {
+                "id": "5_1_1_3",
+                "name": "坐标框架更新服务",
+                "routerName": "BusinessNavigation5_1_1_3"
+              },
+              {
+                "id": "5_1_1_4",
+                "name": "GNSS产品服务",
+                "routerName": "BusinessNavigation5_1_1_4"
+              }
+            ]
+          },
+          {
+            "id": "5_1_2",
+            "name": "高程基准",
+            "routerName": "BusinessNavigation5_1_2_1",
+            "children": [
+              {
+                "id": "5_1_2_1",
+                "name": "水准网点服务",
+                "routerName": "BusinessNavigation5_1_2_1",
+                "specialRouter": "SpecialService6_2_2"
+              },
+              {
+                "id": "5_1_2_2",
+                "name": "青岛、榆林水准网监测",
+                "routerName": "BusinessNavigation5_1_2_2"
+              },
+              {
+                "id": "5_1_2_3",
+                "name": "高程异常服务",
+                "routerName": "BusinessNavigation5_1_2_3"
+              }
+            ]
+          },
+          {
+            "id": "5_1_3",
+            "name": "深度基准",
+            "image": "dashboard",
+            "routerName": "BusinessNavigation5_1_3_1",
+            "children": [
+              {
+                "id": "5_1_3_1",
+                "name": "深度基准面模型",
+                "routerName": "BusinessNavigation5_1_3_1"
+              }
+            ]
+          },
+          {
+            "id": "5_1_4",
+            "name": "重力基准",
+            "routerName": "BusinessNavigation5_1_4_1",
+            "children": [
+              {
+                "id": "5_1_4_1",
+                "name": "重力基准网点",
+                "routerName": "BusinessNavigation5_1_4_1"
+              },
+              {
+                "id": "5_1_4_2",
+                "name": "重力异常模型服务",
+                "routerName": "BusinessNavigation5_1_4_2"
+              },
+              {
+                "id": "5_1_4_3",
+                "name": "点质量模型服务",
+                "routerName": "BusinessNavigation5_1_4_3"
+              },
+              {
+                "id": "5_1_4_4",
+                "name": "垂线偏差模型服务",
+                "routerName": "BusinessNavigation5_1_4_4"
+              }
+            ]
+          },
+          {
+            "id": "5_1_5",
+            "name": "磁力基准",
+            "image": "dashboard",
+            "routerName": "BusinessNavigation5_1_5_1",
+            "children": [
+              {
+                "id": "5_1_5_1",
+                "name": "地磁台站服务",
+                "routerName": "BusinessNavigation5_1_5_1"
+              },
+              {
+                "id": "5_1_5_2",
+                "name": "磁力格网服务",
+                "routerName": "BusinessNavigation5_1_5_2"
+              },
+              {
+                "id": "5_1_5_3",
+                "name": "磁场强度计算",
+                "routerName": "BusinessNavigation5_1_5_3",
+                "specialRouter": "SpecialService6_1_1"
+              },
+              {
+                "id": "5_1_5_4",
+                "name": "磁偏角计算",
+                "routerName": "BusinessNavigation5_1_5_4",
+                "specialRouter": "SpecialService6_1_2"
+              },
+              {
+                "id": "5_1_5_5",
+                "name": "磁倾角计算",
+                "routerName": "BusinessNavigation5_1_5_5"
+              }
+            ]
+          },
+          {
+            "id": "5_1_6",
+            "name": "天文基准",
+            "image": "dashboard",
+            "routerName": "BusinessNavigation5_1_6_1",
+            "children": [
+              {
+                "id": "5_1_6_1",
+                "name": "天文控制网点",
+                "routerName": "BusinessNavigation5_1_6_1"
+              },
+              {
+                "id": "5_1_6_2",
+                "name": "天文定向计算",
+                "routerName": "BusinessNavigation5_1_6_2"
+              }
+            ]
+          },
+          {
+            "id": "5_1_7",
+            "name": "深空基准",
+            "image": "dashboard",
+            "routerName": "BusinessNavigation5_1_7_1",
+            "children": [
+              {
+                "id": "5_1_7_1",
+                "name": "EOP测定服务",
+                "routerName": "BusinessNavigation5_1_7_1"
+              },
+              {
+                "id": "5_1_7_2",
+                "name": "EOP预报服务",
+                "routerName": "BusinessNavigation5_1_7_2"
+              },
+              {
+                "id": "5_1_7_3",
+                "name": "天文星历表服务",
+                "routerName": "BusinessNavigation5_1_7_3"
+              }
+            ]
+          },
+          {
+            "id": "5_1_8",
+            "name": "海底基准",
+            "image": "dashboard",
+            "routerName": "SpaceStandard",
+            "children": [
+              {
+                "id": "5_1_8_1",
+                "name": "海洋潮汐预报",
+                "routerName": "BusinessNavigation5_1_8_1"
+              },
+              {
+                "id": "5_1_8_2",
+                "name": "海面地形",
+                "routerName": "BusinessNavigation5_1_8_2"
+              },
+              {
+                "id": "5_1_8_3",
+                "name": "平均海面高",
+                "routerName": "BusinessNavigation5_1_8_3"
+              },
+              {
+                "id": "5_1_8_4",
+                "name": "陆海垂直基准转换",
+                "routerName": "BusinessNavigation5_1_8_4"
+              }
+            ]
+          },
+          {
+            "id": "5_1_9",
+            "name": "空间基准转换与统一",
+            "routerName": "BusinessNavigation5_1_9_1",
+            "children": [
+              {
+                "id": "5_1_9_1",
+                "name": "坐标框架转换",
+                "routerName": "BusinessNavigation5_1_9_1"
+              },
+              {
+                "id": "5_1_9_2",
+                "name": "坐标系转换",
+                "routerName": "BusinessNavigation5_1_9_2"
+              },
+              {
+                "id": "5_1_9_3",
+                "name": "高程基准转换",
+                "routerName": "BusinessNavigation5_1_9_3"
+              }
+            ]
+          },
+          {
+            "id": "5_1_10",
+            "name": "常规测量数据处理与服务",
+            "routerName": "BusinessNavigation5_1_10_1",
+            "children": [
+              {
+                "id": "5_1_10_1",
+                "name": "边角网技术服务",
+                "routerName": "BusinessNavigation5_1_10_1"
+              },
+              {
+                "id": "5_1_10_2",
+                "name": "导线测量数据处理",
+                "routerName": "BusinessNavigation5_1_10_2"
+              },
+              {
+                "id": "5_1_10_3",
+                "name": "EDM数据处理",
+                "routerName": "BusinessNavigation5_1_10_3"
+              },
+              {
+                "id": "5_1_10_4",
+                "name": "阵地测量数据处理",
+                "routerName": "BusinessNavigation5_1_10_4"
+              }
+            ]
+          },
+          {
+            "id": "5_1_11",
+            "name": "航天发射场装备标校",
+            "routerName": "BusinessNavigation5_1_11_1",
+            "children": [
+              {
+                "id": "5_1_11_1",
+                "name": "装备标校",
+                "routerName": "BusinessNavigation5_1_11_1"
+              },
+              {
+                "id": "5_1_11_2",
+                "name": "相对位置测量",
+                "routerName": "BusinessNavigation5_1_11_2"
+              }
+            ]
+          },
+          {
+            "id": "5_1_12",
+            "name": "目标定位计算与精度评估",
+            "routerName": "BusinessNavigation5_1_12",
+            "children": []
+          },
+          {
+            "id": "5_1_13",
+            "name": "军事地质调查",
+            "routerName": "BusinessNavigation5_1_13",
+            "children": []
+          },
+          {
+            "id": "5_1_14",
+            "name": "军事地质图分析",
+            "routerName": "BusinessNavigation5_1_14",
+            "children": []
+          }
+        ]
+      },
+      {
+        "id": "5_2",
+        "name": "地理空间信息资源建设",
+        "routerName": "BusinessNavigation5_2_1",
+        "children": [
+          {
+            "id": "5_2_1",
+            "name": "航空遥感探测",
+            "routerName": "BusinessNavigation5_2_1_1",
+            "children": [
+              {
+                "id": "5_2_1_1",
+                "name": "线阵推扫式相机航空影像数据获取",
+                "routerName": "BusinessNavigation5_2_1_1"
+              },
+              {
+                "id": "5_2_1_2",
+                "name": "多视角相机影像数据获取",
+                "routerName": "BusinessNavigation5_2_1_2"
+              },
+              {
+                "id": "5_2_1_3",
+                "name": "航空激光点云数据获取",
+                "routerName": "BusinessNavigation5_2_1_3"
+              },
+              {
+                "id": "5_2_1_4",
+                "name": "航空重力数据获取",
+                "routerName": "BusinessNavigation5_2_1_4"
+              },
+              {
+                "id": "5_2_1_5",
+                "name": "无人机测绘系统数据获取",
+                "routerName": "BusinessNavigation5_2_1_5"
+              }
+            ]
+          },
+          {
+            "id": "5_2_2",
+            "name": "专题地理信息资源建设",
+            "routerName": "BusinessNavigation5_2_2_1",
+            "children": [
+              {
+                "id": "5_2_2_1",
+                "name": "武器装备阵地测量",
+                "routerName": "BusinessNavigation5_2_2_1"
+              },
+              {
+                "id": "5_2_2_2",
+                "name": "实景三维模型构建",
+                "routerName": "BusinessNavigation5_2_2_2"
+              },
+              {
+                "id": "5_2_2_3",
+                "name": "专题图编制与更新",
+                "routerName": "BusinessNavigation5_2_2_3"
+              },
+              {
+                "id": "5_2_2_4",
+                "name": "海洋军事地理遥感调查",
+                "routerName": "BusinessNavigation5_2_2_4"
+              }
+            ]
+          },
+          {
+            "id": "5_2_3",
+            "name": "基础地理信息资源建设",
+            "routerName": "BusinessNavigation5_2_3_1",
+            "children": [
+              {
+                "id": "5_2_3_1",
+                "name": "联合作战图编制与更新",
+                "routerName": "BusinessNavigation5_2_3_1"
+              },
+              {
+                "id": "5_2_3_2",
+                "name": "军用地形图测制",
+                "routerName": "BusinessNavigation5_2_3_2"
+              },
+              {
+                "id": "5_2_3_3",
+                "name": "数字高程模型制作",
+                "routerName": "BusinessNavigation5_2_3_3"
+              },
+              {
+                "id": "5_2_3_4",
+                "name": "数字地表模型制作",
+                "routerName": "BusinessNavigation5_2_3_4"
+              },
+              {
+                "id": "5_2_3_5",
+                "name": "数字正射影像制作",
+                "routerName": "BusinessNavigation5_2_3_5"
+              }
+            ]
+          },
+          {
+            "id": "5_2_4",
+            "name": "数据融合加工处理",
+            "routerName": "BusinessNavigation5_2_4_1",
+            "children": [
+              {
+                "id": "5_2_4_1",
+                "name": "陆海地理信息融合",
+                "routerName": "BusinessNavigation5_2_4_1"
+              },
+              {
+                "id": "5_2_4_2",
+                "name": "全球一张图数据融合",
+                "routerName": "BusinessNavigation5_2_4_2"
+              },
+              {
+                "id": "5_2_4_3",
+                "name": "全球线划图数据产品定制",
+                "routerName": "BusinessNavigation5_2_4_3"
+              },
+              {
+                "id": "5_2_4_4",
+                "name": "地图瓦片数据制作",
+                "routerName": "BusinessNavigation5_2_4_4"
+              }
+            ]
+          },
+          {
+            "id": "5_2_5",
+            "name": "全球地名数据建设",
+            "routerName": "BusinessNavigation5_2_5_1",
+            "children": [
+              {
+                "id": "5_2_5_1",
+                "name": "地名译写",
+                "routerName": "BusinessNavigation5_2_5_1"
+              },
+              {
+                "id": "5_2_5_2",
+                "name": "地名融合",
+                "routerName": "BusinessNavigation5_2_5_2"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "5_3",
+        "name": "地理空间信息服务保障能力",
+        "routerName": "BusinessNavigation5_3_1",
+        "children": [
+          {
+            "id": "5_3_1",
+            "name": "信息系统服务",
+            "routerName": "BusinessNavigation5_3_1_1",
+            "children": [
+              {
+                "id": "5_3_1_1",
+                "name": "空间基准信息处理与服务系统",
+                "routerName": "BusinessNavigation5_3_1_1"
+              },
+              {
+                "id": "5_3_1_2",
+                "name": "时空基准信息服务",
+                "routerName": "BusinessNavigation5_3_1_2"
+              },
+              {
+                "id": "5_3_1_3",
+                "name": "识图用图训练系统",
+                "routerName": "BusinessNavigation5_3_1_3"
+              },
+              {
+                "id": "5_3_1_4",
+                "name": "数字战场",
+                "routerName": "BusinessNavigation5_3_1_4"
+              },
+              {
+                "id": "5_3_1_5",
+                "name": "战场通",
+                "routerName": "BusinessNavigation5_3_1_5"
+              }
+            ]
+          },
+          {
+            "id": "5_3_2",
+            "name": "地理地缘分析评估服务",
+            "routerName": "BusinessNavigation5_3_2_1",
+            "children": [
+              {
+                "id": "5_3_2_1",
+                "name": "地缘安全形势分析",
+                "routerName": "BusinessNavigation5_3_2_1"
+              },
+              {
+                "id": "5_3_2_2",
+                "name": "军事地理环境分析",
+                "routerName": "BusinessNavigation5_3_2_2"
+              },
+              {
+                "id": "5_3_2_3",
+                "name": "地缘环境定量评估",
+                "routerName": "BusinessNavigation5_3_2_3"
+              }
+            ]
+          },
+          {
+            "id": "5_3_3",
+            "name": "地理空间信息资源池服务",
+            "routerName": "BusinessNavigation5_3_3_1",
+            "children": [
+              {
+                "id": "5_3_3_1",
+                "name": "数据存储管理",
+                "routerName": "BusinessNavigation5_3_3_1"
+              },
+              {
+                "id": "5_3_3_2",
+                "name": "地理计算服务",
+                "routerName": "BusinessNavigation5_3_3_2"
+              },
+              {
+                "id": "5_3_3_3",
+                "name": "路径规划",
+                "routerName": "BusinessNavigation5_3_3_3"
+              },
+              {
+                "id": "5_3_3_4",
+                "name": "情报资料分析",
+                "routerName": "BusinessNavigation5_3_3_4"
+              }
+            ]
+          },
+          {
+            "id": "5_3_4",
+            "name": "战场空间知识服务",
+            "routerName": "BusinessNavigation5_3_4_1",
+            "children": [
+              {
+                "id": "5_3_4_1",
+                "name": "技术咨询与服务",
+                "routerName": "BusinessNavigation5_3_4_1"
+              },
+              {
+                "id": "5_3_4_2",
+                "name": "数据服务",
+                "routerName": "BusinessNavigation5_3_4_2"
+              },
+              {
+                "id": "5_3_4_3",
+                "name": "成果数据在线汇交",
+                "routerName": "BusinessNavigation5_3_4_3"
+              },
+              {
+                "id": "5_3_4_4",
+                "name": "成果数据在线协同分发",
+                "routerName": "BusinessNavigation5_3_4_4"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "5_4",
+        "name": "精导武器测绘保障能力",
+        "routerName": "BusinessNavigation5_4",
+        "children": [
+          {
+            "id": "5_4_1",
+            "name": "发射首区空间基准保障",
+            "routerName": "BusinessNavigation5_4_1"
+          },
+          {
+            "id": "5_4_2",
+            "name": "精导数字图保障",
+            "routerName": "BusinessNavigation5_4_2"
+          },
+          {
+            "id": "5_4_3",
+            "name": "目标测绘保障能力",
+            "routerName": "BusinessNavigation5_4_3"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "6",
+    "name": "特色服务",
+    "image": "specialService",
+    "routerName": "SpecialService6_1_1",
+    "children": [
+      {
+        "id": "6_1",
+        "name": "在线解算服务",
+        "routerName": "SpecialService6_1_1",
+        "children": [
+          {
+            "id": "6_1_1",
+            "name": "磁场强度计算",
+            "routerName": "SpecialService6_1_1"
+          },
+          {
+            "id": "6_1_2",
+            "name": "磁偏角计算",
+            "routerName": "SpecialService6_1_2"
+          }
+        ]
+      },
+      {
+        "id": "6_2",
+        "name": "基础地理数据服务",
+        "image": "dashboard",
+        "routerName": "SpecialService6_2_1",
+        "children": [
+          {
+            "id": "6_2_1",
+            "name": "大地控制点",
+            "routerName": "SpecialService6_2_1"
+          },
+          {
+            "id": "6_2_2",
+            "name": "水准网点服务",
+            "routerName": "SpecialService6_2_2"
+          }
+        ]
+      },
+      {
+        "id": "6_3",
+        "name": "技术支持保障服务",
+        "image": "dashboard",
+        "routerName": "TechniqueSupportService"
+      },
+      {
+        "id": "6_4",
+        "name": "信息系统服务",
+        "image": "dashboard",
+        "routerName": "InfoSystemService"
+      }
+    ]
+  },
+  {
+    "id": "7",
+    "name": "运维管理",
+    "image": "devopsMgn",
+    "routerName": "UserMgn",
+    "children": [
+      {
+        "id": "7_1",
+        "name": "用户管理",
+        "image": "dashboard",
+        "routerName": "UserMgn"
+      },
+      {
+        "id": "7_2",
+        "name": "权限管理",
+        "image": "dashboard",
+        "routerName": "PriorityMgn"
+      },
+      {
+        "id": "7_3",
+        "name": "配置管理",
+        "image": "dashboard",
+        "routerName": "SettingMgn"
+      },
+      {
+        "id": "7_4",
+        "name": "日志管理",
+        "image": "dashboard",
+        "routerName": "LogMgn"
+      }
+    ]
+  }
+]

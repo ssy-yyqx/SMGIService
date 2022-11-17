@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.htht.service.platform.portal.manager.mapper.ModuleMapper">
+
+    <resultMap id="BaseResultMap" type="cn.htht.service.platform.portal.entity.manager.Module">
+        <id column="id" property="id" />
+        <result column="module_name" property="moduleName" />
+        <result column="parent_module_id" property="parentModuleId" />
+        <result column="parent_module_name" property="parentModuleName" />
+        <result column="template_type" property="templateType" />
+        <result column="module_type" property="moduleType" />
+        <result column="is_show" property="isShow" />
+        <result column="icon" property="icon" />
+        <result column="router" property="router" />
+        <result column="router_str" property="routerStr" />
+        <result column="sort" property="sort" />
+        <result column="is_link" property="isLink" />
+        <result column="link_url" property="linkUrl" />
+        <result column="template_id" property="templateId" />
+        <result column="create_time" property="createTime" />
+        <result column="create_by" property="createBy" />
+        <result column="update_time" property="updateTime"/>
+        <result column="update_by" property="updateBy"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="BaseColumnList">
+        id, module_name, parent_module_id, parent_module_name, template_type, module_type, icon, is_show, router, router_str, sort, is_link, link_url, template_id, create_time, create_by, update_time, update_by
+    </sql>
+
+    <sql id="joinColumnList">
+        m.id, m.module_name, m.parent_module_id, m.parent_module_name, m.template_type, m.module_type, m.icon, m.is_show, m.router, m.router_str, m.sort, m.is_link, m.link_url, m.template_id, m.create_time, m.create_by, m.update_time, m.update_by
+    </sql>
+
+
+    <select id="getModuleList" resultMap="BaseResultMap">
+        select
+            <include refid="BaseColumnList"></include>
+        from
+        t_module
+        <if test="isShow != null and isShow != ''">
+            where is_show = 1
+        </if>
+        order by sort asc, create_time asc
+    </select>
+
+    <select id="getParentModule" resultMap="BaseResultMap">
+        select
+        <include refid="BaseColumnList"></include>
+        from
+        t_module
+        where parent_module_id = ''
+        order by sort asc, create_time asc
+    </select>
+
+    <select id="getById" resultMap="BaseResultMap">
+        select
+        <include refid="BaseColumnList"></include>
+        from
+        t_module
+        where id = #{moduleId}
+        order by sort asc, create_time asc
+    </select>
+
+    <select id="selectExistModule" resultType="java.lang.Integer">
+        select count(1) from t_module where module_name = #{moduleName}
+        union all
+        select count(1) from t_module where router = #{router}
+    </select>
+
+    <select id="getMaxSortInParentModule" resultType="java.lang.Integer">
+        select max(sort) from t_module where parent_module_id = #{parentModuleId}
+    </select>
+
+    <select id="getMaxSortInModule" resultType="java.lang.Integer">
+        select max(sort) from t_module where parent_module_id = ''
+    </select>
+
+    <select id="selectCountByParentId" resultType="java.lang.Integer">
+        select count(1) from t_module where parent_module_id = #{id}
+    </select>
+
+    <select id="getModuleListByParentId" resultMap="BaseResultMap">
+        select
+        <include refid="BaseColumnList"/>
+        from
+        t_module
+        where parent_module_id = #{id}
+    </select>
+
+    <select id="getHeaderInfo" resultType="java.util.Map">
+        select
+        (select count(1) from user_support where module_id = #{moduleId}) as support_count,
+        (select count(1) from user_collection where module_id = #{moduleId}) as collect_count,
+        (select count(1) from user_comments where module_id = #{moduleId}) as comment_count,
+        (select count(1) from user_support where module_id = #{moduleId} and user_id = #{userId}) as is_support,
+        (select count(1) from user_collection where module_id = #{moduleId} and user_id = #{userId}) as is_collect
+    </select>
+
+    <select id="getModuleApplyTemplateList" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="joinColumnList"/>
+        from t_module m
+        left join t_apply_template a on m.template_id = a.id
+        where a.handle_type = #{type}
+    </select>
+
+    <update id="updateSort">
+        update t_module set
+        <if test="sort == 'up'.toString()">
+            sort = sort - 1
+        </if>
+        <if test="sort == 'down'.toString()">
+            sort = sort + 1
+        </if>
+        where id = #{id}
+    </update>
+
+    <update id="updateSortChange">
+        update t_module set
+            sort = #{oldSort}
+        where sort = #{newSort} and id != #{moduleId} and
+        <if test="parentModuleId != ''">
+            parent_module_id = #{parentModuleId}
+        </if>
+        <if test="parentModuleId == ''">
+            parent_module_id = ''
+        </if>
+    </update>
+
+    <update id="updateIsShow">
+        update t_module set is_show = #{isShow} where id = #{id}
+    </update>
+
+</mapper>

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.htht.service.platform.portal.manager.mapper.SmartReplyMapper">
+    <resultMap id="smartReplyMap" type="cn.htht.service.platform.portal.entity.manager.SmartReply">
+        <id column="id" property="id"/>
+        <result column="search_key" property="searchKey"/>
+        <result column="remark" property="remark"/>
+        <result column="question" property="question"/>
+        <result column="reply" property="reply"/>
+        <result column="create_by" property="createBy"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_by" property="updateBy"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <sql id="smartReplyColumn">
+        id, search_key, remark, question, reply, create_by, create_time, update_by, update_time
+    </sql>
+
+    <insert id="insertSmartReply" parameterType="cn.htht.service.platform.portal.entity.manager.SmartReply">
+        insert into t_smart_reply (
+            <if test="id != null and id != ''">id,</if>
+            <if test="searchKey != null and searchKey != ''">search_key,</if>
+            <if test="remark != null and remark != ''">remark,</if>
+            <if test="question != null and question != ''">question,</if>
+            <if test="reply != null and reply != ''">reply,</if>
+            <if test="createBy != null and createBy != ''">create_by,</if>
+            create_time
+        ) values (
+            <if test="id != null and id != ''">#{id},</if>
+            <if test="searchKey != null and searchKey != ''">#{searchKey},</if>
+            <if test="remark != null and remark != ''">#{remark},</if>
+            <if test="question != null and question != ''">#{question},</if>
+            <if test="reply != null and reply != ''">#{reply},</if>
+            <if test="createBy != null and createBy != ''">#{createBy},</if>
+            REPLACE(unix_timestamp(current_timestamp(3)),'.','')
+        )
+    </insert>
+
+    <update id="updateSmartReply" parameterType="cn.htht.service.platform.portal.entity.manager.SmartReply">
+        update t_smart_reply
+        set
+        <if test="searchKey != null and searchKey != ''">search_key = #{searchKey},</if>
+        <if test="remark != null and remark != ''">remark = #{remark},</if>
+        <if test="question != null and question != ''">question = #{question},</if>
+        <if test="reply != null and reply != ''">reply = #{reply},</if>
+        <if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
+        update_time = REPLACE(unix_timestamp(current_timestamp(3)),'.','')
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSmartReply">
+        delete from t_smart_reply
+        where id = #{id}
+    </delete>
+    <select id="selectSmartReplyListByKeyword"
+            resultType="cn.htht.service.platform.portal.entity.manager.SmartReply">
+        select
+        <include refid="smartReplyColumn"/>
+        from t_smart_reply
+        <if test="keyword != null and keyword != ''">
+            where question like #{keyword}
+        </if>
+        order by create_time desc
+    </select>
+
+
+</mapper>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.htht.service.platform.portal.manager.mapper.ListTabMapper">
+
+    <resultMap id="BaseResultMap" type="cn.htht.service.platform.portal.entity.manager.ListTab">
+        <id column="id" property="id"/>
+        <result column="service_template_id" property="serviceTemplateId"/>
+        <result column="tab_type" property="tabType"/>
+        <result column="content_type" property="contentType"/>
+        <result column="sort" property="sort"/>
+        <result column="tab_name" property="tabName"/>
+    </resultMap>
+
+    <sql id="selectTabList">
+        select id, service_template_id, tab_type, content_type, sort, tab_name from t_list_tab t
+    </sql>
+
+    <select id="getAsListTabByTemplateId" resultMap="BaseResultMap">
+        <include refid="selectTabList"/>
+        where t.service_template_id = #{id}
+        order by t.sort
+    </select>
+
+     <insert id="insertListTab" parameterType="cn.htht.service.platform.portal.entity.manager.ListTab">
+        insert into t_list_tab ( id, service_template_id, tab_type, content_type, sort, tab_name )
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.id},#{item.serviceTemplateId},#{item.tabType}, #{item.contentType}, #{item.sort},#{item.tabName})
+        </foreach>
+    </insert>
+
+    <insert id="insertTabInfo" parameterType="cn.htht.service.platform.portal.entity.manager.TabInfo">
+        insert into t_tab_info ( id, tab_id, title_name, info_content )
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.id},#{item.tabId},#{item.titleName},#{item.infoContent})
+        </foreach>
+    </insert>
+
+    <delete id="deleteInfoListByTemplate" parameterType="java.lang.String">
+        delete from t_tab_info where tab_id IN (select id from t_list_tab where service_template_id = #{templateId})
+    </delete>
+
+    <delete id="deleteByTemplate" parameterType="java.lang.String">
+        delete from t_list_tab where service_template_id = #{templateId}
+    </delete>
+
+</mapper>

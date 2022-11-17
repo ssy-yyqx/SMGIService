@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.htht.service.platform.portal.manager.mapper.NormalTabMapper">
+
+    <resultMap id="BaseResultMap" type="cn.htht.service.platform.portal.entity.manager.NormalTab">
+        <id column="id" property="id"/>
+        <result column="service_template_id" property="serviceTemplateId"/>
+        <result column="tab_type" property="tabType"/>
+        <result column="content_type" property="contentType"/>
+        <result column="sort" property="sort"/>
+        <result column="tab_name" property="tabName"/>
+        <result column="content" property="content"/>
+        <result column="reference_link" property="referenceLink"/>
+    </resultMap>
+
+    <sql id="selectNormal">
+        select id, service_template_id, tab_type, content_type, sort, tab_name, content, reference_link  from t_normal_tab t
+    </sql>
+
+    <select id="getAsTemplateByTemplateId" resultMap="BaseResultMap">
+        <include refid="selectNormal"/>
+        where t.service_template_id = #{id}
+        order by t.sort
+    </select>
+
+    <insert id="insertNormalTab" parameterType="cn.htht.service.platform.portal.entity.manager.NormalTab">
+        insert into t_normal_tab ( id, service_template_id, tab_type, content_type, sort, tab_name, content, reference_link )
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.id},#{item.serviceTemplateId},#{item.tabType}, #{item.contentType},#{item.sort},#{item.tabName}, #{item.content}, #{item.referenceLink})
+        </foreach>
+    </insert>
+
+    <delete id="deleteByTemplate" parameterType="java.lang.String">
+        delete from t_normal_tab where service_template_id = #{templateId}
+    </delete>
+
+</mapper>

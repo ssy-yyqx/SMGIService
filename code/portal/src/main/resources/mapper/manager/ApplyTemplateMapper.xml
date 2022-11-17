@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.htht.service.platform.portal.manager.mapper.ApplyTemplateMapper">
+
+    <resultMap id="BaseReferResultMap" type="cn.htht.service.platform.portal.entity.manager.ApplyTemplate">
+        <id column="id" property="id" />
+        <result column="module_id" property="moduleId" />
+        <result column="search_key" property="searchKey" />
+        <result column="service_name" property="serviceName" />
+        <result column="handle_type" property="handleType" />
+        <result column="content" property="content" />
+        <result column="guide_file_id" property="guideFileId" />
+        <result column="redirect_module_id" property="redirectModuleId" />
+        <result column="redirect_url" property="redirectUrl" />
+        <result column="create_time" property="createTime" />
+        <result column="create_by" property="createBy" />
+        <result column="update_time" property="updateTime"/>
+        <result column="update_by" property="updateBy"/>
+        <association property="guideFileData" javaType="cn.htht.service.platform.portal.entity.manager.FileData" resultMap="FileResult"/>
+    </resultMap>
+
+    <resultMap id="BaseResultMap" type="cn.htht.service.platform.portal.entity.manager.ApplyTemplate">
+        <id column="id" property="id" />
+        <result column="module_id" property="moduleId" />
+        <result column="search_key" property="searchKey" />
+        <result column="service_name" property="serviceName" />
+        <result column="handle_type" property="handleType" />
+        <result column="content" property="content" />
+        <result column="guide_file_id" property="guideFileId" />
+        <result column="redirect_module_id" property="redirectModuleId" />
+        <result column="redirect_url" property="redirectUrl" />
+        <result column="create_time" property="createTime" />
+        <result column="create_by" property="createBy" />
+        <result column="update_time" property="updateTime"/>
+        <result column="update_by" property="updateBy"/>
+    </resultMap>
+
+    <resultMap id="FileResult" type="cn.htht.service.platform.portal.entity.manager.FileData">
+        <id property="id" column="fid"/>
+        <result property="fileType" column="file_type"/>
+        <result property="ext" column="ext"/>
+        <result property="bucketName" column="bucket_name"/>
+        <result property="objectName" column="object_name"/>
+        <result property="fileName" column="file_name"/>
+        <result property="fileTitle" column="file_title"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="BaseColumnList">
+        t.id, t.module_id, t.search_key,t.service_name, t.handle_type, t.content, t.guide_file_id, t.redirect_module_id, t.redirect_url, t.create_time, t.create_by, t.update_time, t.update_by
+    </sql>
+
+    <sql id="FileColumnList">
+        f.id as fid, f.file_type, f.ext, f.bucket_name, f.object_name, f.file_name, f.file_title
+    </sql>
+
+    <sql id="selectVo">
+        select
+        <include refid="BaseColumnList"></include>,
+        <include refid="FileColumnList"></include>
+        from t_apply_template t
+        left join t_file_data f ON t.guide_file_id = f.id
+    </sql>
+
+    <sql id="selectTemplate">
+        select
+        <include refid="BaseColumnList"></include>
+        from t_apply_template t
+    </sql>
+
+    <select id="getTemplateByModuleId" resultMap="BaseReferResultMap">
+        <include refid="selectVo"/>
+        where t.module_id = #{id}
+    </select>
+
+
+    <select id="getAsTemplateByModuleId" resultMap="BaseResultMap">
+        <include refid="selectTemplate"/>
+        where t.module_id = #{id}
+    </select>
+
+    <update id="updateRouter">
+        update set redirect_module_id = #{redirectModuleId}, router = #{router} where module_id = #{moduleId}
+    </update>
+
+    <delete id="deleteById">
+        delete from t_apply_template where t.id = #{templateId}
+    </delete>
+
+</mapper>

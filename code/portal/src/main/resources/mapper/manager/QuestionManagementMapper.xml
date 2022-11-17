@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.htht.service.platform.portal.manager.mapper.QuestionManagementMapper">
+    <resultMap id="questionManagementResult" type="cn.htht.service.platform.portal.entity.manager.QuestionManagement">
+        <id column="id" property="id"/>
+        <result column="search_key" property="searchKey"/>
+        <result column="remark" property="remark"/>
+        <result column="question_time" property="questionTime"/>
+        <result column="question_by" property="questionBy"/>
+        <result column="question_content" property="questionContent"/>
+        <result column="reply_time" property="replyTime"/>
+        <result column="reply_by" property="replyBy"/>
+        <result column="reply_content" property="replyContent"/>
+        <result column="reply_update_time" property="replyUpdateTime"/>
+        <result column="reply_update_by" property="replyUpdateBy"/>
+        <result column="service_rating" property="serviceRating"/>
+        <result column="is_replied" property="isReplied"/>
+        <result column="is_rated" property="isRated"/>
+        <result column="is_read" property="isRead"/>
+        <result column="questioner_id" property="questionerId"/>
+    </resultMap>
+
+    <sql id="questionManagementColumn">
+        id, search_key, remark, question_time, question_by, question_content,
+        reply_time, reply_by, reply_content, reply_update_time, reply_update_by,
+        service_rating, is_replied, is_rated, is_read, questioner_id
+    </sql>
+
+    <insert id="insertQuestion" parameterType="cn.htht.service.platform.portal.entity.manager.QuestionManagement">
+        insert into t_questions (
+            <if test="id != null and id != ''">id, </if>
+            <if test="searchKey != null and searchKey != ''">search_key, </if>
+            <if test="remark != null and remark != ''">remark, </if>
+            <if test="questionBy != null and questionBy != ''">question_by, </if>
+            <if test="questionContent != null and questionContent != ''">question_content, </if>
+            <if test="questionerId != null and questionerId != ''">questioner_id, </if>
+            <if test="serviceRating != null and serviceRating != ''">service_rating, </if>
+            is_replied,
+            is_read,
+            is_rated,
+            question_time
+        )values (
+            <if test="id != null and id != ''">#{id}, </if>
+            <if test="searchKey != null and searchKey != ''">#{searchKey}, </if>
+            <if test="remark != null and remark != ''">#{remark}, </if>
+            <if test="questionBy != null and questionBy != ''">#{questionBy}, </if>
+            <if test="questionContent != null and questionContent != ''">#{questionContent}, </if>
+            <if test="questionerId != null and questionerId != ''">#{questionerId}, </if>
+            <if test="serviceRating != null and serviceRating != ''">#{serviceRating}, </if>
+            0,
+            0,
+            0,
+            REPLACE(unix_timestamp(current_timestamp(3)),'.','')
+        )
+    </insert>
+    <update id="replyQuestion">
+        update t_questions set
+        reply_by = #{replyBy},
+        reply_content = #{replyContent},
+        reply_time = REPLACE(unix_timestamp(current_timestamp(3)),'.',''),
+        is_replied = 1
+        where id = #{id}
+    </update>
+    <update id="rateQuestion">
+        update t_questions set
+        service_rating = #{serviceRating},
+        is_rated = 1
+        where id = #{id}
+    </update>
+    <update id="withdrawReply">
+        update t_questions set
+        reply_by = null,
+        reply_content = null,
+        reply_time = null,
+        reply_update_by = null,
+        reply_update_time = null,
+        is_replied = 0
+        where id = #{id}
+    </update>
+    <update id="updateReplyQuestion">
+        update t_questions set
+        reply_update_by = #{replyUpdateBy},
+        reply_content = #{replyContent},
+        reply_update_time = REPLACE(unix_timestamp(current_timestamp(3)),'.',''),
+        is_replied = 1
+        where id = #{id}
+    </update>
+    <update id="readQuestion">
+        update t_questions set
+        is_read = 1
+        where id = #{id}
+    </update>
+
+    <delete id="deleteQuestionById">
+        delete from t_questions
+        where id = #{id}
+    </delete>
+
+    <select id="selectQuestionManagementList"
+            resultType="cn.htht.service.platform.portal.entity.manager.QuestionManagement">
+        select <include refid="questionManagementColumn"/>
+        from t_questions
+        <where>
+            <if test="userId != null and userId != ''">
+                and questioner_id = #{userId}
+            </if>
+            <if test="keyword != null and keyword != ''">
+                and question_content like concat(concat('%',#{keyword}),'%')
+            </if>
+        </where>
+        order by question_time desc
+    </select>
+    <select id="selectQuestionManagementListByKeyword"
+            resultType="cn.htht.service.platform.portal.entity.manager.QuestionManagement">
+        select <include refid="questionManagementColumn"/>
+        from t_questions
+        where questioner_id = #{questionerId} and question_content like concat(concat('%',#{keyword}),'%')
+        order by question_time desc
+    </select>
+    <select id="selectQuestionById"
+            resultType="cn.htht.service.platform.portal.entity.manager.QuestionManagement">
+        select <include refid="questionManagementColumn"/>
+        from t_questions
+        where id = #{id}
+    </select>
+    <select id="getUserUnreadNumber" resultType="java.lang.Integer">
+        select count(0) from t_questions
+        where is_read = 0 and questioner_id = #{userId}
+    </select>
+
+
+</mapper>

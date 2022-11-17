@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>websocket_admin_chat</title>
+    <script type="text/javascript" src="http://ajax.microsoft.com/ajax/jquery/jquery-1.4.min.js"></script>
+</head>
+<body>
+<!--  用户名 -->
+<input  type="hidden" th:value="${username}" id="username"  style="display: none" />
+<input  type="hidden" th:value="${chat_type}" id="chat_type"  style="display: none" />
+Welcome<br/><input id="text" type="text"/>
+<button onclick="send()">发送消息</button>
+<!--<button onclick="asd()">asd</button>-->
+<td>消息发送至:</td>
+<select id="onLineUser" size="1" style="width: 10%;height:30px">
+    <option  value="所有人">所有人</option>
+</select>
+<hr/>
+<button onclick="closeWebSocket()">关闭WebSocket连接</button>
+<!--<button onclick="openWebSocket()">打开WebSocket连接</button>-->
+<hr/>
+<!--<span id = "miax" style="width:20%;background-color: #F2F2F2;float:right;overflow-y :auto;overflow :auto;">-->
+<!--&lt;!&ndash;    <button onclick="fresh()">刷新在线列表</button>&ndash;&gt;-->
+<!--    <li style="text-align: center">在线列表</li>-->
+<!--</span>-->
+<hr/>
+<div id="message"></div>
+</body>
+
+<script type="text/javascript">
+    var websocket = null;
+    //判断当前浏览器是否支持WebSocket
+    if ('WebSocket' in window) {
+        websocket = new WebSocket('ws://127.0.0.1:8080/upgrade/ws/asset/' + document.getElementById('username').value + '@' + document.getElementById('chat_type').value);
+        // websocket = new WebSocket(document.getElementById('path').value);
+
+    }
+    else {
+        alert('当前浏览器 Not support websocket')
+    }
+
+    // function openWebSocket(){
+    //     if ('WebSocket' in window) {
+    //         websocket = new WebSocket('ws://127.0.0.1:8080/upgrade/ws/asset/' + document.getElementById('username').value + ',' + document.getElementById('chat_type').value);
+    //         // websocket = new WebSocket(document.getElementById('path').value);
+    //     }
+    //     else {
+    //         alert('当前浏览器 Not support websocket')
+    //     }
+    // }
+    //连接发生错误的回调方法
+    websocket.onerror = function () {
+        setMessageInnerHTML("WebSocket连接发生错误");
+    };
+
+    //连接成功建立的回调方法
+    websocket.onopen = function () {
+        setMessageInnerHTML("WebSocket连接成功" + document.getElementById("username").value + '<br/>');
+    }
+
+    //接收到消息的回调方法
+    websocket.onmessage = function (event) {
+        var received_msg = event.data;           //接收到的数据
+        var obj = JSON.parse(received_msg);    //json数据
+        var messageType = obj.messageType;      //数据类型（1上线/2下线/3在线名单/4发信息)
+        var onlineName = obj.username;         //用户名
+
+        //上线通知+在线列表刷新
+        if(obj.messageType==1){
+            if((onlineName != $("#username").val())){ //展示除不等于自己的所有用户
+                appendMessageInnerHTML("[系统]:" + onlineName + "  上线了")
+                // $("#miax").html($("#miax").html()+"<li style='text-align: left'>---"+ onlineName[i] +"</li>" );
+                $("#onLineUser").html($("#onLineUser").html()+"<option  value='"+ onlineName +"'>"+ onlineName +"</option>");
+            }
+            var onlineName = obj.onlineUsers;  //所有在线用户
+            // $("#miax").html("<li style='text-align: center'>在线用户--["+ onlineName.length  +"]</li>");
+            $("#onLineUser").html("<option  value='所有人'>所有人</option>");
+            for(var i=0;i<onlineName.length;i++){
+                if((onlineName[i] != $("#username").val())){ //展示除不等于自己的所有用户
+                    // $("#miax").html($("#miax").html()+"<li style='text-align: left'>---"+ onlineName[i] +"</li>" );
+                    $("#onLineUser").html($("#onLineUser").html()+"<option  value='"+ onlineName[i] +"'>"+ onlineName[i] +"</option>");
+                }
+            }
+            //$("#miax").html($("#miax").html()+" <li style='text-align: center'>"+ onlineName +"</li>");
+        }
+        //下线通知+在线列表刷新
+        else if(obj.messageType==2){
+            if((onlineName != $("#username").val())){ //展示除不等于自己的所有用户
+                appendMessageInnerHTML("[系统]:" + onlineName + "  下线了")
+            }
+            var onlineName = obj.onlineUsers;  //剩余所有在线用户
+            // $("#miax").html("<li style='text-align: center'>在线用户--["+ onlineName.length  +"]</li>");
+            $("#onLineUser").html("<option  value='所有人'>所有人</option>");
+            for(var i=0;i<onlineName.length;i++){
+                if((onlineName[i] != $("#username").val())){ //展示除不等于自己的所有用户
+                    // $("#miax").html($("#miax").html()+"<li style='text-align: left'>---"+ onlineName[i] +"</li>" );
+                    $("#onLineUser").html($("#onLineUser").html()+"<option  value='"+ onlineName[i] +"'>"+ onlineName[i] +"</option>");
+                }
+            }
+        }
+        //在线列表
+        else if(obj.messageType==3){
+            var onlineName = obj.onlineUsers; //所有在线用户
+            // $("#miax").html("<li style='text-align: center'>在线用户--["+ onlineName.length +"]</li>");
+            $("#onLineUser").html("<option  value='所有人'>所有人</option>");
+            for(var i=0;i<onlineName.length;i++){
+                if(onlineName[i] != $("#username").val()){ //展示除不等于自己的所有用户
+                    // $("#miax").html($("#miax").html()+ " <li style='text-align: left'>---"+ onlineName[i] +"</li>" );
+                    $("#onLineUser").html($("#onLineUser").html()+"<option  value='"+ onlineName[i] +"'>"+ onlineName[i] +"</option>");
+                }
+            }
+        }
+        //信息接收
+        else if(obj.messageType==4){
+            var time2 = new Date();
+            var date = time2.getHours()+":"+time2.getMinutes()+":"+ time2.getSeconds();  //时间
+            if(obj.fromusername != $("#username").val() ){    //自己不接自己的消息
+                // if(obj.tousername=="所有人"){
+                //     //发给所有人
+                //     miqx.html(miqx.html()+" <li style='text-align: left'>["+ obj.fromusername+"]说:-"+obj.textMessage +"</li>");
+                // }else {
+                //     //发给指定人
+                //     mizx.html(mizx.html()+" <li style='text-align: left'>["+ obj.fromusername+"]说:-"+obj.textMessage+"</li>");
+                // }
+                appendMessageInnerHTML(date + " " + obj.fromusername+"对"+obj.tousername+"说："+obj.textMessage);
+            }
+        }
+        else if(obj.messageType==5){
+            var time2 = new Date();
+            var date = time2.getHours()+":"+time2.getMinutes()+":"+ time2.getSeconds();  //时间
+            if(obj.fromusername == $("#username").val() ){    //自己的消息
+                appendMessageInnerHTML(date + " [系统]:" + obj.textMessage);
+            }
+        }
+    }
+
+    //连接关闭的回调方法
+    websocket.onclose = function () {
+        setMessageInnerHTML("WebSocket连接关闭");
+    }
+
+    //监听窗口关闭事件，当窗口关闭时，主动去关闭websocket连接，防止连接还没断开就关闭窗口，server端会抛异常。
+    window.onbeforeunload = function () {
+        closeWebSocket();
+    }
+
+    //将消息显示在网页上
+    function setMessageInnerHTML(innerHTML) {
+        document.getElementById('message').innerHTML = innerHTML;
+    }
+
+    //将消息显示在网页上
+    function appendMessageInnerHTML(innerHTML) {
+        document.getElementById('message').innerHTML += innerHTML + '<br/>';
+    }
+
+    //将消息显示在网页上
+    function setMessageInnerHTMLOn(innerHTML) {
+        document.getElementById('message').innerHTML = '';
+        var arr = eval(innerHTML);
+        for(var i=0;i<arr.length;i++){
+            var obj = JSON.parse(arr[i])
+            document.getElementById('message').innerHTML += obj.userId + ' ' + obj.createDate + ' ' + obj.createTime + '<br/>' + obj.message + '<br/>';
+        }
+    }
+
+    //关闭WebSocket连接
+    function closeWebSocket() {
+        websocket.close();
+    }
+
+    //发送消息
+    function send() {
+        var usernameX = $("#username").val()         //发送数据人
+        var usernameY = $("#onLineUser").val();      //接收数据人
+        var message = $("#text").val();               //发送的数据
+        var chat_type = $("#chat_type").val();
+        if(usernameY=="所有人"){
+            usernameY = "All";
+        }
+        var message = {
+            "message":message,
+            "username":usernameX,
+            "to":usernameY,
+            "chat_type":chat_type
+        };
+        //发送数据
+        websocket.send(JSON.stringify(message));
+    }
+    function asd() {
+        $.ajax({
+            url:'asd',	//这是后端接口的url
+            method:'post',
+            success:function (res) {
+                //res便是的数据便是后端拿到的数据
+                //这里需要注意：res为局部变量，
+                //所以需要在方法外定义一个变量把res赋值给他，才能在方法之外使用。
+                document.getElementById('message').innerHTML += res + '<br/>';
+            }
+        })
+    }
+</script>
+</html>

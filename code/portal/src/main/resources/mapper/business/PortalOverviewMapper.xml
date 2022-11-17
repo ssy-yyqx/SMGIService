@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.htht.service.platform.portal.business.mapper.PortalOverviewMapper">
+    <resultMap id="PortalOverviewResultMap" type="cn.htht.service.platform.portal.entity.business.PortalOverview">
+        <id column="id" property="id"/>
+        <result column="title" property="title"/>
+        <result column="search_key" property="searchKey"/>
+        <result column="router" property="router"/>
+        <result column="create_time" property="createTime"/>
+        <result column="create_by" property="createBy"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="update_by" property="updateBy"/>
+        <result column="remark" property="remark"/>
+        <result column="image_url" property="imageUrl"/>
+    </resultMap>
+    <select id="selectPortalNewsList"
+            resultType="cn.htht.service.platform.portal.entity.business.PortalOverview">
+        SELECT c.id,m.module_name,c.title,c.search_key,m.router,c.create_time,c.create_by,c.update_time,c.update_by,c.remark,c.image_url FROM t_module as m
+        INNER JOIN t_info_template as t
+        ON m.id = t.module_id
+        INNER JOIN t_content as c
+        on t.id = c.template_id
+        WHERE m.parent_module_name = "新闻聚焦"
+        ORDER BY c.create_time DESC limit 10
+    </select>
+    <select id="selectPortalNoticeList"
+            resultType="cn.htht.service.platform.portal.entity.business.PortalOverview">
+        SELECT c.id,m.module_name,c.title,c.search_key,m.router,c.create_time,c.create_by,c.update_time,c.update_by,c.remark,c.image_url FROM t_module as m
+        INNER JOIN t_info_template as t
+        ON m.id = t.module_id
+        INNER JOIN t_content as c
+        on t.id = c.template_id
+        WHERE m.parent_module_name = "通知公告"
+        ORDER BY c.create_time DESC limit 10
+    </select>
+    <select id="selectPortalCenterList"
+            resultType="cn.htht.service.platform.portal.entity.business.PortalOverview">
+        SELECT c.id,m.module_name,c.title,c.search_key,m.router,c.create_time,c.create_by,c.update_time,c.update_by,c.remark,c.image_url FROM t_module as m
+        INNER JOIN t_single_template as t
+        ON m.id = t.module_id
+        INNER JOIN t_content as c
+        on t.id = c.template_id
+        WHERE m.parent_module_name = "中心职能" and m.module_name != "中心介绍"
+        ORDER BY m.sort asc
+    </select>
+    <select id="selectPortalCenterOverview" resultType="java.lang.String">
+        SELECT c.content FROM t_module as m
+        INNER JOIN t_single_template as t
+        ON m.id = t.module_id
+        INNER JOIN t_content as c
+        on t.id = c.template_id
+        WHERE m.module_name = "中心介绍"
+    </select>
+    <select id="selectPortalServiceList" resultType="cn.htht.service.platform.portal.entity.manager.Module">
+        select
+        id, module_name, parent_module_id, parent_module_name, template_type, module_type, icon, is_show, router, router_str, sort, is_link, link_url, template_id, create_time, create_by, update_time, update_by
+        from
+        t_module
+        WHERE m.parent_module_name = "业务导航"
+    </select>
+
+
+</mapper>

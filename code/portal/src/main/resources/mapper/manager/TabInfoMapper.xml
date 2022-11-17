@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.htht.service.platform.portal.manager.mapper.TabInfoMapper">
+
+    <resultMap id="BaseResultMap" type="cn.htht.service.platform.portal.entity.manager.TabInfo">
+        <id column="id" property="id"/>
+        <result column="tab_id" property="tabId"/>
+        <result column="title_name" property="titleName"/>
+        <result column="info_content" property="infoContent"/>
+
+    </resultMap>
+
+    <sql id="selectTabList">
+        select * from t_tab_info t
+    </sql>
+
+    <select id="getAsTabInfoByTemplateId" resultMap="BaseResultMap">
+        <include refid="selectTabList"/>
+        where t.tab_id = #{id2}
+    </select>
+</mapper>

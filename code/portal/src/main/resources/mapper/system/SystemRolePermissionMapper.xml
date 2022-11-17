@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.htht.service.platform.portal.system.mapper.SystemRolePermissionMapper">
+
+    <select id="selectPermissionKeysByUserId" resultType="java.lang.String">
+        SELECT perm_key FROM `system_permission_key` k
+        INNER JOIN system_permission_str_key sk ON sk.key_id = k.id
+        INNER JOIN system_role_permission rp ON rp.perm_id = sk.str_id
+        INNER JOIN system_user_role ur ON rp.role_id = ur.role_id
+        WHERE ur.user_id = #{userId}
+    </select>
+
+    <insert id="insertBatch" parameterType="cn.htht.service.platform.portal.entity.system.SystemRolePermission">
+        insert into system_role_permission ( id, role_id, perm_id )
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.id},#{item.roleId},#{item.permId})
+        </foreach>
+    </insert>
+
+    <delete id="deleteRolePermissionByRoleId" parameterType="String">
+        delete
+        from system_role_permission
+        where role_id = #{roleId}
+    </delete>
+
+</mapper> 

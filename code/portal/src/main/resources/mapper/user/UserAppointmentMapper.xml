@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.htht.service.platform.portal.user.mapper.UserAppointmentMapper">
+    <resultMap type="cn.htht.service.platform.portal.entity.user.UserAppointment" id="UserAppointmentResult">
+        <id property="id" column="id"/>
+        <result property="sequenceCode" column="sequence_code"/>
+        <result property="moduleId" column="module_id"/>
+        <result property="moduleName" column="module_name"/>
+        <result property="applyUserId" column="apply_user_id"/>
+        <result property="applyUsername" column="apply_username"/>
+        <result property="approveUserId" column="approve_user_id"/>
+        <result property="approveUsername" column="approve_username"/>
+        <result property="approveFileId" column="approve_file_id"/>
+        <result property="approveTime" column="approve_time"/>
+        <result property="status" column="status"/>
+        <result property="detail" column="detail"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <association property="approveFile" javaType="cn.htht.service.platform.portal.entity.manager.FileData" resultMap="FileResult"/>
+    </resultMap>
+
+    <resultMap id="FileResult" type="cn.htht.service.platform.portal.entity.manager.FileData">
+        <id property="id" column="fid"/>
+        <result property="fileType" column="file_type"/>
+        <result property="ext" column="ext"/>
+        <result property="bucketName" column="bucket_name"/>
+        <result property="objectName" column="object_name"/>
+        <result property="fileName" column="file_name"/>
+        <result property="fileTitle" column="file_title"/>
+    </resultMap>
+
+    <sql id="fileDtaColumn">
+        f.id as fid, f.file_type, f.ext, f.bucket_name, f.object_name, f.file_name, f.file_title
+    </sql>
+
+    <sql id="userAppointmentColumn">
+        a.id,
+        a.sequence_code,
+        a.module_id,
+        a.module_name,
+        a.apply_user_id,
+        a.apply_username,
+        a.approve_user_id,
+        a.approve_username,
+        a.approve_file_id,
+        a.approve_time,
+        a.status,
+        a.detail,
+        a.create_time,
+        a.update_time
+    </sql>
+
+    <sql id="selectAppointmentRecordVo">
+        select
+        <include refid="userAppointmentColumn"/>
+        from user_appointment as a
+        left join t_file_data as f on a.approve_file_id = f.id
+    </sql>
+    <insert id="addAppointment">
+        insert into user_appointment (
+            <if test="id != null and id != ''">id, </if>
+            <if test="sequenceCode != null and sequenceCode != ''">sequence_code, </if>
+            <if test="moduleId != null and moduleId != ''">module_id, </if>
+            <if test="moduleName != null and moduleName != ''">module_name, </if>
+            <if test="applyUserId != null and applyUserId != ''">apply_user_id, </if>
+            <if test="applyUsername != null and applyUsername != ''">apply_username, </if>
+            <if test="approveFileId != null and approveFileId != ''">approve_file_id, </if>
+            <if test="detail != null and detail != ''">detail, </if>
+            status,
+            create_time
+        ) values (
+            <if test="id != null and id != ''">#{id}, </if>
+            <if test="sequenceCode != null and sequenceCode != ''">#{sequenceCode}, </if>
+            <if test="moduleId != null and moduleId != ''">#{moduleId}, </if>
+            <if test="moduleName != null and moduleName != ''">#{moduleName}, </if>
+            <if test="applyUserId != null and applyUserId != ''">#{applyUserId}, </if>
+            <if test="applyUsername != null and applyUsername != ''">#{applyUsername}, </if>
+            <if test="approveFileId != null and approveFileId != ''">#{approveFileId}, </if>
+            <if test="detail != null and detail != ''">#{detail}, </if>
+            1,
+            REPLACE(unix_timestamp(current_timestamp(3)),'.','')
+        )
+    </insert>
+    <update id="cancelAppointment">
+        update user_appointment
+        set status = 4
+        where id = #{appointmentId}
+    </update>
+    <!--审批列表查看-->
+    <select id="getAppointmentList" resultType="cn.htht.service.platform.portal.entity.user.UserAppointment">
+        <include refid="selectAppointmentRecordVo"/>
+        <where>
+            <if test="userId != null and userId != ''">
+                and a.apply_user_id = #{userId}
+            </if>
+            <if test="status != null and status != ''">
+                and a.status = #{status}
+            </if>
+            <if test="keyword != null and keyword != ''">
+                and a.module_name like concat(concat('%',#{keyword}),'%')
+            </if>
+        </where>
+    </select>
+    <select id="getAppointmentByaAppointmentId"
+            resultType="cn.htht.service.platform.portal.entity.user.UserAppointment">
+        <include refid="selectAppointmentRecordVo"/>
+        where a.id = #{appointmentId}
+    </select>
+    <select id="getMaxSequenceCode" resultType="java.lang.String">
+        select sequence_code from user_appointment
+        order by sequence_code desc limit 1
+    </select>
+    <!--审批通过状态更新-->
+    <update id="updatePassState">
+        update user_appointment
+        set status = 2,
+            detail = #{detail}
+        where id = #{appointmentId}
+    </update>
+    <!--审批不通过状态更新-->
+    <update id="updateNotPassState">
+        update user_appointment
+        set status = 3,
+            detail = #{detail}
+        where id = #{appointmentId}
+    </update>
+
+</mapper>

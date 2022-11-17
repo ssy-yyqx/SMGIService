@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.htht.service.platform.portal.system.mapper.SystemRoleMapper">
+
+    <resultMap type="cn.htht.service.platform.portal.entity.system.SystemRole" id="SysRoleResult">
+        <id property="id" column="id"/>
+        <result property="roleName" column="role_name"/>
+        <result property="roleKey" column="role_key"/>
+        <result property="roleSort" column="role_sort"/>
+        <result property="describe" column="describe"/>
+        <result property="status" column="status"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="remark" column="remark"/>
+        <collection property="permissionStrList" javaType="java.util.List" resultMap="PermissionResult"/>
+    </resultMap>
+
+    <resultMap id="PermissionResult" type="cn.htht.service.platform.portal.entity.system.SystemPermissionStr">
+        <id property="id" column="pid"/>
+        <result property="permName" column="perm_name"/>
+    </resultMap>
+
+    <sql id="selectRoleVo">
+        select r.id, role_name, role_key, role_sort, `describe`, status, create_time, update_time, remark, p.id as pid, p.perm_name
+        from system_role r
+        left join system_role_permission rp on r.id = rp.role_id
+        left join system_permission_str p on rp.perm_id = p.id
+    </sql>
+
+    <select id="selectRoleList" parameterType="cn.htht.service.platform.portal.entity.system.SystemRole"
+            resultMap="SysRoleResult">
+        <include refid="selectRoleVo"/>
+        where 1=1
+        <if test="roleName != null and roleName != ''">
+            AND r.role_name like concat(concat('%',#{roleName}),'%')
+        </if>
+        <if test="status != null and status != ''">
+            AND r.status = #{status}
+        </if>
+        <if test="roleKey != null and roleKey != ''">
+            AND r.role_key like concat(concat('%',#{roleKey}),'%')
+        </if>
+        <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+            and r.create_time &gt;= #{params.beginTime}
+        </if>
+        <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+            and r.create_time &lt;= #{params.endTime}
+        </if>
+        order by r.role_sort
+    </select>
+
+
+    <select id="selectRoleAll" resultMap="SysRoleResult">
+        select r.id,r.role_name,r.role_key,r.role_sort,r.describe,r.status,r.create_time,r.update_time,r.remark,
+                ps.id, ps.perm_name
+        from system_role r
+        left join system_role_permission rp on rp.role_id = r.id
+        left join system_permission_str ps on ps.id = rp.perm_id
+    </select>
+
+    <select id="selectRoleById" parameterType="String" resultMap="SysRoleResult">
+        select distinct r.id,r.role_name,r.role_key,r.role_sort,r.describe,r.status,r.create_time,r.update_time,r.remark
+        from system_role r
+        where r.id = #{roleId}
+    </select>
+
+    <select id="checkRoleNameUnique" parameterType="String" resultMap="SysRoleResult">
+        <include refid="selectRoleVo"/>
+        where r.role_name=#{roleName} limit 1
+    </select>
+
+    <select id="checkRoleKeyUnique" parameterType="String" resultMap="SysRoleResult">
+        <include refid="selectRoleVo"/>
+        where r.role_key=#{roleKey} limit 1
+    </select>
+
+    <insert id="insertRole" parameterType="cn.htht.service.platform.portal.entity.system.SystemRole">
+        insert into system_role(
+        <if test="id != null and id != 0">id,</if>
+        <if test="roleName != null and roleName != ''">role_name,</if>
+        <if test="roleKey != null and roleKey != ''">role_key,</if>
+        <if test="roleSort != null and roleSort != ''">role_sort,</if>
+        <if test="describe != null and describe != ''">`describe`,</if>
+        <if test="status != null and status != ''">status,</if>
+        <if test="remark != null and remark != ''">remark,</if>
+        create_time
+        )values(
+        <if test="id != null and id != 0">#{id},</if>
+        <if test="roleName != null and roleName != ''">#{roleName},</if>
+        <if test="roleKey != null and roleKey != ''">#{roleKey},</if>
+        <if test="roleSort != null and roleSort != ''">#{roleSort},</if>
+        <if test="describe != null and describe != ''">#{describe},</if>
+        <if test="status != null and status != ''">#{status},</if>
+        <if test="remark != null and remark != ''">#{remark},</if>
+        REPLACE(unix_timestamp(current_timestamp(3)),'.','')
+        )
+    </insert>
+
+    <update id="updateRole" parameterType="cn.htht.service.platform.portal.entity.system.SystemRole">
+        update system_role
+        <set>
+            <if test="roleName != null and roleName != ''">role_name = #{roleName},</if>
+            <if test="roleKey != null and roleKey != ''">role_key = #{roleKey},</if>
+            <if test="roleSort != null and roleSort != ''">role_sort = #{roleSort},</if>
+            <if test="describe != null and describe != ''">describe = #{describe},</if>
+            <if test="status != null and status != ''">status = #{status},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            update_time = REPLACE(unix_timestamp(current_timestamp(3)),'.','')
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteRoleById" parameterType="String">
+        update system_role
+        set del_flag = '2'
+        where id = #{roleId}
+    </delete>
+
+    <delete id="deleteRoleByIds" parameterType="String">
+        update system_role set del_flag = '2' where id in
+        <foreach collection="array" item="roleId" open="(" separator="," close=")">
+            #{roleId}
+        </foreach>
+    </delete>
+
+</mapper> 
